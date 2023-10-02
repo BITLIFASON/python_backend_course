@@ -1,10 +1,12 @@
+"""FastAPI application module."""
+
 import os
 
 import uvicorn
 from fastapi import FastAPI
 
-from .routers import router
-from .crud import create_db
+from . import routers
+from . import crud
 
 
 app = FastAPI(
@@ -16,13 +18,13 @@ app = FastAPI(
     redoc_url="/docs/redoc",
 )
 
-app.include_router(router)
+app.include_router(routers.router)
 
 if __name__ == "__main__":
     DB_PATH = "../data/database.sqlite"
 
     if not os.path.exists(DB_PATH):
-        create_db()
+        crud.create_db()
 
     host = "127.0.0.1"
     port = 80

@@ -1,9 +1,11 @@
+"""Data access wrappers."""
+
 import sqlite3
 from typing import Union
 
 from fastapi import HTTPException
 
-from .schemas import Book
+from . import schemas
 
 DB_PATH = "../data/database.sqlite"
 
@@ -23,7 +25,7 @@ def create_db():
     connection.close()
 
 
-def add_book_into_db(book: Book):
+def add_book_into_db(book: schemas.Book):
     connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
 
@@ -51,14 +53,14 @@ def add_book_into_db(book: Book):
     connection.close()
 
 
-def get_book_by_id(id: int) -> Union[Book, None]:
+def get_book_by_id(id: int) -> Union[schemas.Book, None]:
     connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
 
     cursor.execute("SELECT * FROM book WHERE id = ?", (id,))
     result = cursor.fetchall()
     if result:
-        book = Book(
+        book = schemas.Book(
             id=result[0][0],
             title=result[0][1],
             author=result[0][2],
@@ -72,7 +74,7 @@ def get_book_by_id(id: int) -> Union[Book, None]:
     return book
 
 
-def update_book_by_id(book: Book):
+def update_book_by_id(book: schemas.Book):
     connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
 

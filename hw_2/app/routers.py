@@ -1,14 +1,15 @@
+"""FastAPI router module."""
+
 from fastapi import APIRouter, HTTPException
 from typing import Union
-from .schemas import Book
 
-from .crud import add_book_into_db, get_book_by_id, update_book_by_id, delete_book_by_id
+from . import crud, schemas
 
 router = APIRouter()
 
 
 @router.post("/books")
-async def add_book(book: Union[Book, None]) -> Union[str, None]:
+async def add_book(book: Union[schemas.Book, None]) -> Union[str, None]:
     """
     Add book to library
 
@@ -21,18 +22,18 @@ async def add_book(book: Union[Book, None]) -> Union[str, None]:
 
     if book:
         if book.id is not None:
-            if get_book_by_id(book.id):
+            if crud.get_book_by_id(book.id):
                 raise HTTPException(
                     status_code=404, detail="book with this id already exists"
                 )
-        add_book_into_db(book)
+        crud.add_book_into_db(book)
         return "Success"
     else:
         raise HTTPException(status_code=404, detail="incorrect input data")
 
 
 @router.get("/books/{id}")
-async def get_book(id: int) -> Union[Book, None]:
+async def get_book(id: int) -> Union[schemas.Book, None]:
     """
     View information about book
 
@@ -43,7 +44,7 @@ async def get_book(id: int) -> Union[Book, None]:
         - Book | None: information about book
     """
 
-    book = get_book_by_id(id)
+    book = crud.get_book_by_id(id)
     if book:
         return book
     else:
@@ -51,7 +52,7 @@ async def get_book(id: int) -> Union[Book, None]:
 
 
 @router.put("/books/{id}")
-async def update_book(id: int, book: Union[Book, None] = None) -> Union[str, None]:
+async def update_book(id: int, book: Union[schemas.Book, None] = None) -> Union[str, None]:
     """
     Update information about book
 
@@ -66,11 +67,11 @@ async def update_book(id: int, book: Union[Book, None] = None) -> Union[str, Non
     if book.id != id:
         book.id = id
     if book:
-        if get_book_by_id(book.id) is None:
+        if crud.get_book_by_id(book.id) is None:
             raise HTTPException(
                 status_code=404, detail="book with this id does not exist"
             )
-    update_book_by_id(book)
+    crud.update_book_by_id(book)
     return "Success"
 
 
@@ -86,7 +87,7 @@ async def delete_book(id: int) -> Union[str, None]:
         - str | None: success message
     """
 
-    if get_book_by_id(id) is None:
+    if crud.get_book_by_id(id) is None:
         raise HTTPException(status_code=404, detail="book with this id does not exist")
-    delete_book_by_id(id)
+    crud.delete_book_by_id(id)
     return "Success"

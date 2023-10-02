@@ -1,8 +1,8 @@
 import sqlite3
 import pytest
 
-from .schemas import Book
-from .crud import add_book_into_db, get_book_by_id, update_book_by_id, delete_book_by_id
+from . import schemas
+from . import crud
 
 DB_PATH = "../data/database.sqlite"
 
@@ -18,9 +18,9 @@ DB_PATH = "../data/database.sqlite"
     ],
 )
 def test_add_book(create_test_db, id, title, author, description):
-    init_book = Book(id=id, title=title, author=author, description=description)
+    init_book = schemas.Book(id=id, title=title, author=author, description=description)
 
-    add_book_into_db(init_book)
+    crud.add_book_into_db(init_book)
 
     connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
@@ -28,7 +28,7 @@ def test_add_book(create_test_db, id, title, author, description):
     cursor.execute("SELECT * FROM book WHERE id = ?", (id,))
     result = cursor.fetchall()
     if result:
-        result_book = Book(
+        result_book = schemas.Book(
             id=result[0][0],
             title=result[0][1],
             author=result[0][2],
@@ -64,7 +64,7 @@ def test_get_book(create_test_db, id, title, author, description):
     cursor.execute("SELECT * FROM book WHERE id = ?", (id,))
     result = cursor.fetchall()
     if result:
-        init_book = Book(
+        init_book = schemas.Book(
             id=result[0][0],
             title=result[0][1],
             author=result[0][2],
@@ -75,7 +75,7 @@ def test_get_book(create_test_db, id, title, author, description):
 
     connection.close()
 
-    result_book = get_book_by_id(id)
+    result_book = crud.get_book_by_id(id)
 
     assert init_book == result_book
 
@@ -90,9 +90,9 @@ def test_get_book(create_test_db, id, title, author, description):
     ],
 )
 def test_update_book(create_test_db, id, title, author, description):
-    init_book = Book(id=id, title=title, author=author, description=description)
+    init_book = schemas.Book(id=id, title=title, author=author, description=description)
 
-    update_book_by_id(book=init_book)
+    crud.update_book_by_id(book=init_book)
 
     connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
@@ -100,7 +100,7 @@ def test_update_book(create_test_db, id, title, author, description):
     cursor.execute("SELECT * FROM book WHERE id = ?", (id,))
     result = cursor.fetchall()
     if result:
-        result_book = Book(
+        result_book = schemas.Book(
             id=result[0][0],
             title=result[0][1],
             author=result[0][2],
@@ -123,7 +123,7 @@ def test_update_book(create_test_db, id, title, author, description):
     ],
 )
 def test_delete_book(create_test_db, id, exception_value):
-    delete_book_by_id(id)
+    crud.delete_book_by_id(id)
 
     connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
@@ -131,7 +131,7 @@ def test_delete_book(create_test_db, id, exception_value):
     cursor.execute("SELECT * FROM book WHERE id = ?", (id,))
     result = cursor.fetchall()
     if result:
-        result_book = Book(
+        result_book = schemas.Book(
             id=result[0][0],
             title=result[0][1],
             author=result[0][2],

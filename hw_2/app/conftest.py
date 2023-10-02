@@ -1,8 +1,11 @@
+"""pytest fixtures."""
+
 import os
 import shutil
 import sqlite3
 import pytest
 import shutil
+
 
 DB_PATH = "../data/database.sqlite"
 
