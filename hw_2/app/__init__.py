@@ -1,1 +1,1 @@
-"""API online book sale store"""
+"""API online book library"""

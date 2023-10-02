@@ -1,7 +1,8 @@
 from fastapi import APIRouter, HTTPException
-from schemas import Book
+from typing import Union
+from .schemas import Book
 
-from crud import *
+from .crud import add_book_into_db, get_book_by_id, update_book_by_id, delete_book_by_id
 
 router = APIRouter()
 
@@ -9,7 +10,7 @@ router = APIRouter()
 @router.post("/books")
 async def add_book(book: Union[Book, None]) -> Union[str, None]:
     """
-    Add book to store
+    Add book to library
 
     - Args:
         - book (Book): information about new book
@@ -21,8 +22,9 @@ async def add_book(book: Union[Book, None]) -> Union[str, None]:
     if book:
         if book.id is not None:
             if get_book_by_id(book.id):
-                raise HTTPException(status_code=404, detail="book with this id already exists")
-
+                raise HTTPException(
+                    status_code=404, detail="book with this id already exists"
+                )
         add_book_into_db(book)
         return "Success"
     else:
@@ -32,7 +34,7 @@ async def add_book(book: Union[Book, None]) -> Union[str, None]:
 @router.get("/books/{id}")
 async def get_book(id: int) -> Union[Book, None]:
     """
-    Viewing information about book
+    View information about book
 
     - Args:
         - id (int | None): book id
@@ -48,7 +50,6 @@ async def get_book(id: int) -> Union[Book, None]:
         raise HTTPException(status_code=404, detail="book not found")
 
 
-# Обновление информации о книге
 @router.put("/books/{id}")
 async def update_book(id: int, book: Union[Book, None] = None) -> Union[str, None]:
     """
@@ -64,16 +65,15 @@ async def update_book(id: int, book: Union[Book, None] = None) -> Union[str, Non
 
     if book.id != id:
         book.id = id
-
     if book:
         if get_book_by_id(book.id) is None:
-            raise HTTPException(status_code=404, detail="book with this id does not exist")
-
+            raise HTTPException(
+                status_code=404, detail="book with this id does not exist"
+            )
     update_book_by_id(book)
     return "Success"
 
 
-# Удаление книги из магазина
 @router.delete("/books/{id}")
 async def delete_book(id: int) -> Union[str, None]:
     """
@@ -88,6 +88,5 @@ async def delete_book(id: int) -> Union[str, None]:
 
     if get_book_by_id(id) is None:
         raise HTTPException(status_code=404, detail="book with this id does not exist")
-
     delete_book_by_id(id)
     return "Success"
