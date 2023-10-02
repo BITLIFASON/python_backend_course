@@ -52,7 +52,9 @@ async def get_book(id: int) -> Union[schemas.Book, None]:
 
 
 @router.put("/books/{id}")
-async def update_book(id: int, book: Union[schemas.Book, None] = None) -> Union[str, None]:
+async def update_book(
+    id: int, book: Union[schemas.Book, None] = None
+) -> Union[str, None]:
     """
     Update information about book
 
