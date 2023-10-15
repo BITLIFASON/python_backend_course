@@ -4,8 +4,8 @@ from fastapi import FastAPI
 from transformers import AutoModelForSequenceClassification
 from transformers import AutoTokenizer
 
-# model_id = "lxyuan/distilbert-base-multilingual-cased-sentiments-student"
-pt_save_directory = "sent_model"
+pt_save_directory = "lxyuan/distilbert-base-multilingual-cased-sentiments-student"
+# pt_save_directory = "sent_model"
 model = AutoModelForSequenceClassification.from_pretrained(pt_save_directory)
 tokenizer = AutoTokenizer.from_pretrained(pt_save_directory)
 

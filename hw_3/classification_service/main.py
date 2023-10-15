@@ -4,9 +4,9 @@ from fastapi import FastAPI
 from transformers import AutoModelForSequenceClassification
 from transformers import AutoTokenizer
 
-# model_id = "Yueh-Huan/news-category-classification-distilbert"
-pt_save_directory = "class_model"
-model = AutoModelForSequenceClassification.from_pretrained(pt_save_directory)
+pt_save_directory = "Yueh-Huan/news-category-classification-distilbert"
+# pt_save_directory = "class_model"
+model = AutoModelForSequenceClassification.from_pretrained(pt_save_directory, from_tf=True) # from_tf=True
 tokenizer = AutoTokenizer.from_pretrained(pt_save_directory)
 
 app = FastAPI(

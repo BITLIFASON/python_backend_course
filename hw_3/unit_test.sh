@@ -8,9 +8,9 @@ docker build -f main.Dockerfile --tag=main_service .
 
 docker-compose up -d
 
-echo 'Сервисы загружаются...(10 секунд)'
-sleep 10
-# sleep 120
+echo 'Сервисы загружаются...(120 секунд)'
+# sleep 10
+sleep 120
 
 cd tests && pytest unit_tests.py
 
