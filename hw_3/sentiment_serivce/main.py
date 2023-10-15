@@ -9,7 +9,7 @@ pt_save_directory = "lxyuan/distilbert-base-multilingual-cased-sentiments-studen
 model = AutoModelForSequenceClassification.from_pretrained(pt_save_directory)
 tokenizer = AutoTokenizer.from_pretrained(pt_save_directory)
 
-emotions = ['positive', 'neutral', 'negative']
+emotions = ["positive", "neutral", "negative"]
 
 app = FastAPI(
     title="Sentiment Service",
@@ -18,6 +18,7 @@ app = FastAPI(
     version="0.0.1",
     docs_url="/docs",
 )
+
 
 @app.post("/sentiment/")
 async def get_sentiment(data: dict) -> str:
@@ -30,14 +31,13 @@ async def get_sentiment(data: dict) -> str:
     - Returns:
         - str : sentiment name
     """
-    token_text = tokenizer(data['text'], return_tensors="pt")
+    token_text = tokenizer(data["text"], return_tensors="pt")
     model_output = model(**token_text).logits.argmax()
     emotion = emotions[model_output]
     return emotion
 
 
 if __name__ == "__main__":
-
     host = "0.0.0.0"
     port = 8002
     uvicorn.run(app, host=host, port=port)
