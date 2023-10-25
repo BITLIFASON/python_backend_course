@@ -29,12 +29,27 @@ balance = 1000
 
 @app.get("/balance/")
 def check_balance():
+    """
+    Check balance
+
+    - Returns:
+        - dict : balance
+    """
     global balance
     return {"balance": balance}
 
 
 @app.put("/balance/")
 def change_balance(data: dict):
+    """
+    Change balance
+
+    - Args:
+        - data : dict with difference balance value
+
+    - Returns:
+        - dict : success message
+    """
     global balance
     balance += data["diff"]
     return {"message": "Balance successfully changed."}
@@ -42,6 +57,15 @@ def change_balance(data: dict):
 
 @app.post("/order/")
 def add_order(order: Order):
+    """
+    Change balance
+
+    - Args:
+        - data : object Order
+
+    - Returns:
+        - dict : success message
+    """
     rmq_channel.basic_publish(
         exchange="main_exchange",
         routing_key=order.order_type,
